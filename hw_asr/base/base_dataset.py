@@ -10,9 +10,6 @@ from torch.utils.data import Dataset
 from hw_asr.base.base_text_encoder import BaseTextEncoder
 from hw_asr.utils.parse_config import ConfigParser
 
-# new imports
-import matplotlib.pyplot as plt
-
 
 logger = logging.getLogger(__name__)
 

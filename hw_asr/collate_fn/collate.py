@@ -18,9 +18,10 @@ def collate_fn(dataset_items: List[dict]) -> dict:  # here comes the batch
                 result_batch['text_encoded_length'] = result_batch.get(
                     'text_encoded_length', []
                 ) + [torch.tensor([value.size(-1)])]
-                # result_batch['text_encoded_length'] = result_batch.get(
-                #     'text_encoded_length', []
-                # ) + [value.size(-1)]
+            elif key == 'spectrogram':
+                result_batch['spectrogram_length'] = result_batch.get(
+                    'spectrogram_length', []
+                ) + [torch.tensor([value.size(-1)])]
             result_batch[key] = result_batch.get(key, []) + [
                 value.squeeze(0).transpose(0, -1) if torch.is_tensor(value) else value
             ]
