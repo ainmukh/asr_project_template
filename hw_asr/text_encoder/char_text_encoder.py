@@ -31,7 +31,7 @@ class CharTextEncoder(BaseTextEncoder):
             raise Exception(
                 f"Can't encode text '{text}'. Unknown chars: '{' '.join(unknown_chars)}'")
 
-    def decode(self, vector: Union[Tensor, np.ndarray, List[int]]):
+    def decode(self, vector: Union[Tensor, np.ndarray, List[int]]) -> str:
         return ''.join([self.ind2char[int(ind)] for ind in vector]).strip()
 
     def dump(self, file):
