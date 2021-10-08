@@ -50,7 +50,7 @@ class Trainer(BaseTrainer):
         self.valid_data_loader = valid_data_loader
         self.do_validation = self.valid_data_loader is not None
         self.lr_scheduler = lr_scheduler
-        self.log_step = 10
+        self.log_step = 100
 
         self.train_metrics = MetricTracker(
             "loss", "grad norm", *[m.name for m in self.metrics], writer=self.writer
@@ -90,7 +90,6 @@ class Trainer(BaseTrainer):
         loss.backward()
         self._clip_grad_norm()
         self.optimizer.step()
-
         if self.lr_scheduler is not None:
             self.lr_scheduler.step()
 
@@ -100,7 +99,7 @@ class Trainer(BaseTrainer):
             self.train_metrics.update(met.name, met(**batch))
         self.train_metrics.update("grad norm", self.get_grad_norm())
 
-        if batch_num % self.log_step == 0:
+        if batch_num % self.log_step == 0 and batch_num:
             self.logger.debug(
                 "Train Epoch: {} {} Loss: {:.6f}".format(
                     epoch, self._progress(batch_num), loss.item()
@@ -125,6 +124,7 @@ class Trainer(BaseTrainer):
         self.writer.add_scalar("epoch", epoch)
         for batch_idx, batch in enumerate(
                 tqdm(self.data_loader, desc="train", total=self.len_epoch)
+                # tqdm(self.data_loader, desc="train", total=len(self.data_loader))
         ):
             try:
                 self._train_iteration(batch, epoch, batch_idx)
@@ -163,7 +163,9 @@ class Trainer(BaseTrainer):
                     total=len(self.valid_data_loader)
             ):
                 batch = self.move_batch_to_device(batch, self.device)
-                batch["log_probs"] = self.model(**batch)
+                # batch["log_probs"] = self.model(**batch)
+                batch["logits"] = self.model(**batch)
+                batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
                 batch["log_probs_length"] = self.model.transform_input_lengths(
                     batch["spectrogram_length"]
                 )
