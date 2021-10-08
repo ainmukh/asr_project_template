@@ -12,6 +12,8 @@ from hw_asr.utils.parse_config import ConfigParser
 
 def get_dataloaders(configs: ConfigParser, text_encoder: BaseTextEncoder):
     dataloaders = {}
+    # d = {0: set(), 1: set()}
+    # i = 0
     for split, params in configs["data"].items():
         num_workers = params.get("num_workers", 1)
 
@@ -52,4 +54,9 @@ def get_dataloaders(configs: ConfigParser, text_encoder: BaseTextEncoder):
             dataset, batch_size=bs, collate_fn=collate_fn,
             shuffle=shuffle, num_workers=num_workers, batch_sampler=batch_sampler)
         dataloaders[split] = dataloader
+        #
+        # for b in dataloader:
+        #     for p in b['audio_path']:
+        #         d[i].add(p)
+        # i += 1
     return dataloaders

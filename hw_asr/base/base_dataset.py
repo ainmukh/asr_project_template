@@ -105,7 +105,7 @@ class BaseDataset(Dataset):
             #     [el for el in index if el["length"] <= max_audio_length]
             # )
             exceeds_audio_length = np.array(
-                [1 if el["audio_len"] <= max_audio_length else 0 for el in index]
+                [1 if el["audio_len"] >= max_audio_length else 0 for el in index]
             )
             # exceeds_audio_length = {
             #     el['path'] for el in index if el["audio_len"] >= max_audio_length
@@ -130,7 +130,7 @@ class BaseDataset(Dataset):
             # )
             exceeds_text_length = np.array(
                 [
-                    1 if len(BaseTextEncoder.normalize_text(el["text"])) <= max_text_length else 0
+                    1 if len(BaseTextEncoder.normalize_text(el["text"])) >= max_text_length else 0
                     for el in index
                 ]
             )
@@ -143,7 +143,7 @@ class BaseDataset(Dataset):
             # _total = len(exceeds_text_length)
             logger.info(
                 f"{_total} ({_total / initial_size:.1%}) records are longer then "
-                f"{max_audio_length} characters. Excluding them."
+                f"{max_text_length} characters. Excluding them."
             )
         else:
             exceeds_text_length = False
@@ -151,16 +151,17 @@ class BaseDataset(Dataset):
         records_to_filter = exceeds_text_length | exceeds_audio_length
 
         # if records_to_filter is not False and records_to_filter.any():
-        if records_to_filter is not False and len(records_to_filter) > 0:
-            # _total = records_to_filter.sum()
-            _total = len(records_to_filter)
+        if records_to_filter is not False and records_to_filter.any():
+            _total = records_to_filter.sum()
+            # _total = len(records_to_filter)
             index = [el for el, exclude in zip(index, records_to_filter) if not exclude]
             logger.info(
-                f"Filtered {_total}({_total / initial_size:.1%}) records  from dataset"
+                f"Filtered {_total} ({_total / initial_size:.1%}) records  from dataset"
             )
 
         if limit is not None:
             random.seed(42)  # best seed for deep learning
             random.shuffle(index)
             index = index[:limit]
+        print('records remain:', len(index))
         return index

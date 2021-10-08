@@ -25,6 +25,7 @@ np.random.seed(SEED)
 
 
 def main(config):
+    # exit(print(config.__dict__))
     logger = config.get_logger("train")
 
     # text_encoder
