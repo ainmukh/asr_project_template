@@ -10,10 +10,10 @@ class BaselineModel(BaseModel):
         self.net = Sequential(
             # people say it can aproximate any function...
             nn.Linear(in_features=n_feats, out_features=fc_hidden),
-            # nn.ReLU(),
-            nn.LeakyReLU(),
+            nn.ReLU(),
+            # nn.LeakyReLU(),
             nn.Linear(in_features=fc_hidden, out_features=fc_hidden),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Linear(in_features=fc_hidden, out_features=n_class)
         )
 
