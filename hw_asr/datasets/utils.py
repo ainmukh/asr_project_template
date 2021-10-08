@@ -54,9 +54,5 @@ def get_dataloaders(configs: ConfigParser, text_encoder: BaseTextEncoder):
             dataset, batch_size=bs, collate_fn=collate_fn,
             shuffle=shuffle, num_workers=num_workers, batch_sampler=batch_sampler)
         dataloaders[split] = dataloader
-        #
-        # for b in dataloader:
-        #     for p in b['audio_path']:
-        #         d[i].add(p)
-        # i += 1
+
     return dataloaders
