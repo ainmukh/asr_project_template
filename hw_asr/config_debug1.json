@@ -55,7 +55,7 @@
   "optimizer": {
     "type": "SGD",
     "args": {
-      "lr": 5e-4
+      "lr": 2e-3
     }
   },
   "loss": {
