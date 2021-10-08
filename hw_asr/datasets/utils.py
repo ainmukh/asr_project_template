@@ -12,8 +12,6 @@ from hw_asr.utils.parse_config import ConfigParser
 
 def get_dataloaders(configs: ConfigParser, text_encoder: BaseTextEncoder):
     dataloaders = {}
-    # d = {0: set(), 1: set()}
-    # i = 0
     for split, params in configs["data"].items():
         num_workers = params.get("num_workers", 1)
 
