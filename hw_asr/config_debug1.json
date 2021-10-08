@@ -22,7 +22,7 @@
   },
   "data": {
     "train": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 5,
       "datasets": [
         {
@@ -31,13 +31,13 @@
             "part": "train-clean-100",
             "max_audio_length": 7.0,
             "max_text_length": 200,
-            "limit": 32
+            "limit": 64
           }
         }
       ]
     },
     "val": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 5,
       "datasets": [
         {
@@ -46,7 +46,7 @@
             "part": "train-clean-100",
             "max_audio_length": 7.0,
             "max_text_length": 200,
-            "limit": 32
+            "limit": 64
           }
         }
       ]
@@ -55,7 +55,7 @@
   "optimizer": {
     "type": "SGD",
     "args": {
-      "lr": 3e-4
+      "lr": 5e-4
     }
   },
   "loss": {
@@ -79,7 +79,7 @@
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
-      "steps_per_epoch": 100,
+      "steps_per_epoch": 30,
       "epochs": 50,
       "anneal_strategy": "cos",
       "max_lr": 4e-3,
@@ -94,7 +94,7 @@
     "monitor": "min val_loss",
     "early_stop": 100,
     "tensorboard": true,
-    "len_epoch": 100,
+    "len_epoch": 30,
     "grad_norm_clip": 10
   }
 }
