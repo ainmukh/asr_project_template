@@ -74,14 +74,11 @@
       }
     }
   ],
-  "lr_scheduler": {
-    "type": "OneCycleLR",
+    "lr_scheduler": {
+    "type": "StepLR",
     "args": {
-      "steps_per_epoch": 30,
-      "epochs": 50,
-      "anneal_strategy": "cos",
-      "max_lr": 4e-3,
-      "pct_start": 0.2
+      "step_size": 30,
+      "gamma": 0.5
     }
   },
   "trainer": {
