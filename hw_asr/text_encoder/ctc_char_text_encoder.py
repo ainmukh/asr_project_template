@@ -20,9 +20,19 @@ class CTCCharTextEncoder(CharTextEncoder):
     def ctc_decode(self, inds: List[int]) -> str:
         # TODO: your code here
         # raise NotImplementedError()
+        # res = []
+        # for i in inds:
+        #     res.append(self.ind2char[i.item()])
+        # return ''.join(res)
         res = []
         for i in inds:
-            res.append(self.ind2char[i.item()])
+            cur = self.ind2char[i]
+            if res and res[-1] == cur or not res and cur == ' ':
+                continue
+            res.append(cur)
+            # print(cur, res)
+        res = [ch for ch in res if ch != self.EMPTY_TOK]
+        res = [res[i] for i in range(len(res)) if i == 0 or res[i] != res[i - 1]]
         return ''.join(res)
 
     def ctc_beam_search(self, probs: torch.tensor, beam_size: int = 100) -> List[Tuple[str, float]]:

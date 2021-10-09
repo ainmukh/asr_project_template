@@ -10,6 +10,8 @@ class TestTextEncoder(unittest.TestCase):
         true_text = "i wish i started doing this hw earlier"
         inds = [text_encoder.char2ind[c] for c in text]
         decoded_text = text_encoder.ctc_decode(inds)
+        print('true text:', true_text)
+        print('decoded text:', decoded_text)
         self.assertIn(decoded_text, true_text)
 
     def test_beam_search(self):
