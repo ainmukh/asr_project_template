@@ -2,10 +2,11 @@
   "name": "default_config",
   "n_gpu": 1,
   "preprocessing": {
-    "sr": 16000,
+    "sr": 22050,
     "spectrogram": {
       "type": "MelSpectrogram",
       "args": {
+        "n_mels": 64
       }
     }
   },
@@ -16,7 +17,7 @@
   "arch": {
     "type": "LSTMModel",
     "args": {
-      "n_feats": 128,
+      "n_feats": 64,
       "fc_hidden": 512
     }
   },

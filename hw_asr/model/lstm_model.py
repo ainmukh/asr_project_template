@@ -10,6 +10,7 @@ class LSTMModel(BaseModel):
         self.head = nn.Linear(fc_hidden * 2, n_class)
 
     def forward(self, spectrogram, *args, **kwargs):
+        exit(print(spectrogram.size()))
         x, _ = self.encoder(spectrogram.transpose(1, 2))
         x = self.head(x)
         return x
