@@ -26,7 +26,7 @@ class CTCCharTextEncoder(CharTextEncoder):
         # return ''.join(res)
         res = []
         for i in inds:
-            cur = self.ind2char[i]
+            cur = self.ind2char[i.item()]
             if res and res[-1] == cur or not res and cur == ' ':
                 continue
             res.append(cur)
