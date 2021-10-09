@@ -52,7 +52,7 @@
     }
   },
   "optimizer": {
-    "type": "SGD",
+    "type": "Adam",
     "args": {
       "lr": 2e-3
     }
