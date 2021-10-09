@@ -54,8 +54,7 @@ class LJSpeechDataset(BaseDataset):
 
     def _create_index(self):
         index = []
-        split_dir = self._data_dir
-        print('split dir =', split_dir)
+        split_dir = self._data_dir / 'LJSpeech-1.1.tar.bz2'
         if not split_dir.exists():
             self._load_part()
 
