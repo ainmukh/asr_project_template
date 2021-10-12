@@ -15,11 +15,9 @@
     "spectrogram": []
   },
   "arch": {
-    "type": "LSTMModel",
+    "type": "QuartzNet",
     "args": {
-      "n_feats": 128,
-      "fc_hidden": 512,
-      "n_layers": 3
+      "n_feats": 128
     }
   },
   "data": {
