@@ -1,4 +1,5 @@
 from torch import nn
+import torch.nn.functional as F
 from collections import OrderedDict
 
 from hw_asr.base import BaseModel
@@ -18,7 +19,7 @@ class Conv(nn.Module):
             in_channels=in_channels, out_channels=out_channels, kernel_size=1
         )
         self.bn = nn.BatchNorm1d(out_channels)
-        self.relu = nn.ReLU()
+        # self.relu = nn.ReLU()
 
     def forward(self, spectrogram):
         # print('input size =', spectrogram.size())
@@ -27,7 +28,7 @@ class Conv(nn.Module):
         x = self.pointwise(x)
         # print('after pointwise =', x.size())
         x = self.bn(x)
-        x = self.relu(x)
+        # x = self.relu(x)
         return x
 
 
@@ -37,9 +38,15 @@ class Block(nn.Module):
         super(Block, self).__init__()
         padding = (kernel_size - 1) // 2
         self.base1 = Conv(in_channels, out_channels, kernel_size, padding=padding)
-        self.bases = nn.Sequential(OrderedDict([
-            (f'base{i + 2}', Conv(out_channels, out_channels, kernel_size, padding=padding)) for i in range(1, r)
-        ]))
+        self.bases = []
+        for i in range(1, r):
+            self.bases.append(nn.ReLU())
+            self.bases.append(Conv(out_channels, out_channels, kernel_size, padding=padding))
+        self.bases = nn.Sequential(*self.bases)
+        self.residual = nn.Sequential(
+            nn.Conv1d(in_channels, out_channels, 1),
+            nn.BatchNorm1d(out_channels)
+        )
 
     def forward(self, spectrogram):
         # print('input size =', spectrogram.size())
@@ -47,6 +54,7 @@ class Block(nn.Module):
         # print('after 1st layer =', x.size())
         x = self.bases(x)
         # print('output size =', x.size(), '\n')
+        x = F.relu(x + self.residual(x))
         return x
 
 
@@ -64,14 +72,15 @@ class QuartzNet(BaseModel):
         self.conv2 = Conv(512, 512, 87, 1, 86, 2)
         self.conv3 = Conv(512, 1024, 1)
         self.conv4 = Conv(1024, n_class, 1)
+        self.conv4 = nn.Conv1d(1024, n_class, kernel_size=1)
 
     def forward(self, spectrogram, *args, **kwargs):
-        x = self.conv1(spectrogram)
+        x = F.relu(self.conv1(spectrogram))
         # print('conv1 =', x.size())
         x = self.blocks(x)
-        x = self.conv2(x)
+        x = F.relu(self.conv2(x))
         # print('conv2 =', x.size())
-        x = self.conv3(x)
+        x = F.relu(self.conv3(x))
         # print('conv3 =', x.size())
         x = self.conv4(x)
         # print('conv4 =', x.size())
