@@ -176,7 +176,7 @@ class Trainer(BaseTrainer):
                 # print('batch["log_probs_length"][0]', batch["log_probs_length"][0])
                 # print('batch["text_encoded_length"][0]', batch["text_encoded_length"][0])
                 print('loss =', torch.nn.CTCLoss()(
-                    torch.transpose(batch["log_probs"], 0, 1)[:, 0, :],
+                    torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1),
                     batch['text_encoded'][0, :],
                     batch["log_probs_length"][0],
                     batch["text_encoded_length"][0]
