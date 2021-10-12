@@ -6,7 +6,7 @@
     "spectrogram": {
       "type": "MelSpectrogram",
       "args": {
-        "n_mels": 128
+        "n_mels": 64
       }
     }
   },
@@ -17,7 +17,7 @@
   "arch": {
     "type": "QuartzNet",
     "args": {
-      "n_feats": 128
+      "n_feats": 64
     }
   },
   "data": {
