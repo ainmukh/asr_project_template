@@ -76,6 +76,14 @@ class QuartzNet(BaseModel):
         self.conv3 = Conv(512, 1024, 1)
         self.conv4 = Conv(1024, n_class, 1)
         self.conv4 = nn.Conv1d(1024, n_class, kernel_size=1, bias=False)
+        self.init_weights()
+
+    def init_weights(self):
+        for p in self.parameters():
+            if p.dim() > 1:
+                nn.init.orthogonal(p)
+            else:
+                nn.init.normal_(p)
 
     def forward(self, spectrogram, *args, **kwargs):
         x = F.relu(self.conv1(spectrogram))
