@@ -64,6 +64,7 @@ class Block(nn.Module):
 class QuartzNet(BaseModel):
     def __init__(self, n_feats, n_class, *args, **kwargs):
         super().__init__(n_feats, n_class, *args, **kwargs)
+        self.bn = nn.BatchNorm1d(n_feats)
         self.conv1 = Conv(n_feats, stride=2, padding=(33 - 1) // 2)
         self.blocks = nn.Sequential(
             Block(),
@@ -86,7 +87,8 @@ class QuartzNet(BaseModel):
                 nn.init.normal_(p)
 
     def forward(self, spectrogram, *args, **kwargs):
-        x = F.relu(self.conv1(spectrogram))
+        x = self.bn(spectrogram)
+        x = F.relu(self.conv1(x))
         # print('conv1 =', x.size())
         x = self.blocks(x)
         x = F.relu(self.conv2(x))
