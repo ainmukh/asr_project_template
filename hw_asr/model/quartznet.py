@@ -13,10 +13,12 @@ class Conv(nn.Module):
         super(Conv, self).__init__()
         self.depthwise = nn.Conv1d(
             in_channels=in_channels, out_channels=in_channels, kernel_size=kernel_size,
-            stride=stride, padding=padding, dilation=dilation, groups=in_channels
+            stride=stride, padding=padding, dilation=dilation, groups=in_channels,
+            bias=False
         )
         self.pointwise = nn.Conv1d(
-            in_channels=in_channels, out_channels=out_channels, kernel_size=1
+            in_channels=in_channels, out_channels=out_channels, kernel_size=1,
+            bias=False
         )
         self.bn = nn.BatchNorm1d(out_channels)
         # self.relu = nn.ReLU()
@@ -44,7 +46,7 @@ class Block(nn.Module):
             self.bases.append(Conv(out_channels, out_channels, kernel_size, padding=padding))
         self.bases = nn.Sequential(*self.bases)
         self.residual = nn.Sequential(
-            nn.Conv1d(in_channels, out_channels, 1),
+            nn.Conv1d(in_channels, out_channels, 1, bias=False),
             nn.BatchNorm1d(out_channels)
         )
 
@@ -73,7 +75,7 @@ class QuartzNet(BaseModel):
         self.conv2 = Conv(512, 512, 87, 1, 86, 2)
         self.conv3 = Conv(512, 1024, 1)
         self.conv4 = Conv(1024, n_class, 1)
-        self.conv4 = nn.Conv1d(1024, n_class, kernel_size=1)
+        self.conv4 = nn.Conv1d(1024, n_class, kernel_size=1, bias=False)
 
     def forward(self, spectrogram, *args, **kwargs):
         x = F.relu(self.conv1(spectrogram))
