@@ -74,7 +74,7 @@ class QuartzNet(BaseModel):
         x = self.conv3(x)
         # print('conv3 =', x.size())
         x = self.conv4(x)
-        # print('conv4 =', x.size())
+        print('conv4 =', x.size())
         return x
 
     def transform_input_lengths(self, input_lengths):
