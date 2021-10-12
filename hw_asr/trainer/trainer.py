@@ -86,7 +86,10 @@ class Trainer(BaseTrainer):
         # batch["log_probs_length"] = self.model.transform_input_lengths(
         #     batch["spectrogram_length"]
         # )
-        batch["log_probs_length"] = torch.tensor([batch["log_probs"].size()[1]])
+        batch["log_probs_length"] = self.model.transform_input_lengths(
+            batch["spectrogram_length"]
+        ) // 2
+        # batch["log_probs_length"] = torch.tensor([batch["log_probs"].size()[1]])
         loss = self.criterion(**batch)
         loss.backward()
         self._clip_grad_norm()
