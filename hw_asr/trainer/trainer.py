@@ -178,6 +178,12 @@ class Trainer(BaseTrainer):
             self.writer.set_step(epoch * self.len_epoch, "valid")
             self._log_scalars(self.valid_metrics)
             self._log_predictions(part="val", **batch)
+
+            predictions = batch['log_probs'].cpu().argmax(-1)
+            pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
+            print('pred', pred_texts[0])
+            print('targ', batch['text'][0])
+
             self._log_spectrogram(batch["spectrogram"])
 
         # add histogram of model parameters to the tensorboard
