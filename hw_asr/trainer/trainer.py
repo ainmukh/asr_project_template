@@ -180,6 +180,8 @@ class Trainer(BaseTrainer):
             self._log_predictions(part="val", **batch)
 
             predictions = batch['log_probs'].cpu().argmax(-1)
+            print(predictions[0])
+            print(batch['text_encoded'][0])
             pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
             print('pred', pred_texts[0])
             print('targ', batch['text'][0])
