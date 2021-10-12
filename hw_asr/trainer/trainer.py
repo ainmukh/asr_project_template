@@ -171,7 +171,7 @@ class Trainer(BaseTrainer):
                     batch["spectrogram_length"]
                 )  # // 2
                 loss = self.criterion(**batch)
-                print('loss =', torch.nn.CTC_loss(
+                print('loss =', torch.nn.CTCLoss()(
                     torch.transpose(batch["log_probs"][:, 0:, ], 0, 1),
                     batch['text_encoded'][:, 0:, ],
                     batch["log_probs_length"][0],
