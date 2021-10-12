@@ -53,7 +53,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 2e-3
+      "lr": 2e-4
     }
   },
   "loss": {
@@ -75,13 +75,10 @@
     }
   ],
   "lr_scheduler": {
-    "type": "OneCycleLR",
+    "type": "StepLR",
     "args": {
-      "steps_per_epoch": 100,
-      "epochs": 50,
-      "anneal_strategy": "cos",
-      "max_lr": 4e-3,
-      "pct_start": 0.2
+      "step_size": 300,
+      "gamma": 0.5
     }
   },
   "trainer": {

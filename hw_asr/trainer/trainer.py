@@ -85,7 +85,7 @@ class Trainer(BaseTrainer):
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
         batch["log_probs_length"] = self.model.transform_input_lengths(
             batch["spectrogram_length"]
-        )  # // 2
+        ) // 2
         # batch["log_probs_length"] = torch.tensor([batch["log_probs"].size()[1]])
         loss = self.criterion(**batch)
         loss.backward()
@@ -169,7 +169,7 @@ class Trainer(BaseTrainer):
                 batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
                 batch["log_probs_length"] = self.model.transform_input_lengths(
                     batch["spectrogram_length"]
-                )  # // 2
+                ) // 2
                 loss = self.criterion(**batch)
 
                 self.valid_metrics.update("loss", loss.item(), n=len(batch["text"]))
