@@ -172,7 +172,7 @@ class Trainer(BaseTrainer):
                 )  # // 2
                 loss = self.criterion(**batch)
                 print('loss =', torch.nn.CTCLoss()(
-                    torch.transpose(batch["log_probs"], 0, 1)[:, 0:, ].unsqueeze(1),
+                    torch.transpose(batch["log_probs"], 0, 1)[:, 0:, ],
                     batch['text_encoded'][:, 0:, ],
                     batch["log_probs_length"][0],
                     batch["text_encoded_length"][0]
