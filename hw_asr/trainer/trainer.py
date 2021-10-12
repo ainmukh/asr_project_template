@@ -171,7 +171,7 @@ class Trainer(BaseTrainer):
                     batch["spectrogram_length"]
                 )  # // 2
                 loss = self.criterion(**batch)
-                print('x =', torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1))
+                print('x =', torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1).size())
                 print('y =', batch['text_encoded'][0, :].size())
                 print('batch["log_probs_length"][0]', batch["log_probs_length"][0])
                 print('batch["text_encoded_length"][0]', batch["text_encoded_length"][0])
