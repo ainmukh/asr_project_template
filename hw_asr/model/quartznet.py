@@ -50,11 +50,12 @@ class Block(nn.Module):
 
     def forward(self, spectrogram):
         # print('input size =', spectrogram.size())
+        res = self.residual(spectrogram)
         x = self.base1(spectrogram)
         # print('after 1st layer =', x.size())
         x = self.bases(x)
         # print('output size =', x.size(), '\n')
-        x = F.relu(x + self.residual(x))
+        x = F.relu(x + res)
         return x
 
 
