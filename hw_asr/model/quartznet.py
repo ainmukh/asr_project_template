@@ -8,9 +8,8 @@ class Conv(nn.Module):
     def __init__(self,
                  in_channels: int = 128, out_channels: int = 256,
                  kernel_size: int = 33,
-                 stride: int = 1, dilation: int = 1):
+                 stride: int = 1, padding: int = 0, dilation: int = 1):
         super(Conv, self).__init__()
-        padding = (kernel_size - 1) // 2
         self.depthwise = nn.Conv1d(
             in_channels=in_channels, out_channels=in_channels, kernel_size=kernel_size,
             stride=stride, padding=padding, dilation=dilation, groups=in_channels
@@ -36,9 +35,10 @@ class Block(nn.Module):
     def __init__(self, r: int = 5,
                  in_channels: int = 256, out_channels: int = 256, kernel_size: int = 33):
         super(Block, self).__init__()
-        self.base1 = Conv(in_channels, out_channels, kernel_size)
+        padding = (kernel_size - 1) // 2
+        self.base1 = Conv(in_channels, out_channels, kernel_size, padding=padding)
         self.bases = nn.Sequential(OrderedDict([
-            (f'base{i + 2}', Conv(out_channels, out_channels, kernel_size)) for i in range(1, r)
+            (f'base{i + 2}', Conv(out_channels, out_channels, kernel_size, padding=padding)) for i in range(1, r)
         ]))
 
     def forward(self, spectrogram):
@@ -53,7 +53,7 @@ class Block(nn.Module):
 class QuartzNet(BaseModel):
     def __init__(self, n_feats, n_class, *args, **kwargs):
         super().__init__(n_feats, n_class, *args, **kwargs)
-        self.conv1 = Conv(n_feats, stride=2)
+        self.conv1 = Conv(n_feats, stride=2, padding=(33 - 1) // 2)
         self.blocks = nn.Sequential(
             Block(),
             Block(kernel_size=39),
@@ -61,9 +61,9 @@ class QuartzNet(BaseModel):
             Block(in_channels=512, out_channels=512, kernel_size=63),
             Block(in_channels=512, out_channels=512, kernel_size=75)
         )
-        self.conv2 = Conv(512, 512, 87, 1)
-        self.conv3 = Conv(512, 1024, 1, 1)
-        self.conv4 = Conv(1024, n_class, 1, 1, 2)
+        self.conv2 = Conv(512, 512, 87, 1, 86, 2)
+        self.conv3 = Conv(512, 1024, 1)
+        self.conv4 = Conv(1024, n_class, 1)
 
     def forward(self, spectrogram, *args, **kwargs):
         x = self.conv1(spectrogram)
@@ -74,8 +74,8 @@ class QuartzNet(BaseModel):
         x = self.conv3(x)
         # print('conv3 =', x.size())
         x = self.conv4(x)
-        print('conv4 =', x.size())
-        return x
+        # print('conv4 =', x.size())
+        return x.transpose(1, 2)
 
     def transform_input_lengths(self, input_lengths):
         return input_lengths  # we don't reduce time dimension here

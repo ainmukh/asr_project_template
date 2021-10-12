@@ -83,9 +83,10 @@ class Trainer(BaseTrainer):
 
         batch["logits"] = self.model(**batch)
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
-        batch["log_probs_length"] = self.model.transform_input_lengths(
-            batch["spectrogram_length"]
-        )
+        # batch["log_probs_length"] = self.model.transform_input_lengths(
+        #     batch["spectrogram_length"]
+        # )
+        batch["log_probs_length"] = torch.tensor([batch["log_probs"].size()[1]])
         loss = self.criterion(**batch)
         loss.backward()
         self._clip_grad_norm()
@@ -99,7 +100,7 @@ class Trainer(BaseTrainer):
             self.train_metrics.update(met.name, met(**batch))
         self.train_metrics.update("grad norm", self.get_grad_norm())
 
-        if batch_num % self.log_step == 0 and batch_num:
+        if batch_num % self.log_step == 0:
             self.logger.debug(
                 "Train Epoch: {} {} Loss: {:.6f}".format(
                     epoch, self._progress(batch_num), loss.item()
