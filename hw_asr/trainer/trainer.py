@@ -175,12 +175,12 @@ class Trainer(BaseTrainer):
                 # print('y =', batch['text_encoded'][0, :].size())
                 # print('batch["log_probs_length"][0]', batch["log_probs_length"][0])
                 # print('batch["text_encoded_length"][0]', batch["text_encoded_length"][0])
-                print('loss =', torch.nn.CTCLoss()(
-                    torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1),
-                    batch['text_encoded'][0, :].unsqueeze(0),
-                    batch["log_probs_length"][0],
-                    batch["text_encoded_length"][0]
-                ))
+                # print('loss =', torch.nn.CTCLoss()(
+                #     torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1),
+                #     batch['text_encoded'][0, :].unsqueeze(0),
+                #     batch["log_probs_length"][0],
+                #     batch["text_encoded_length"][0]
+                # ))
 
                 self.valid_metrics.update("loss", loss.item(), n=len(batch["text"]))
                 for met in self.metrics:
@@ -189,12 +189,12 @@ class Trainer(BaseTrainer):
             self._log_scalars(self.valid_metrics)
             self._log_predictions(part="val", **batch)
 
-            predictions = batch['log_probs'].cpu().argmax(-1)
-            print(predictions[0])
-            print(batch['text_encoded'][0])
-            pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
-            print('pred', pred_texts[0])
-            print('targ', batch['text'][0])
+            # predictions = batch['log_probs'].cpu().argmax(-1)
+            # print(predictions[0])
+            # print(batch['text_encoded'][0])
+            # pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
+            # print('pred', pred_texts[0])
+            # print('targ', batch['text'][0])
 
             self._log_spectrogram(batch["spectrogram"])
 
