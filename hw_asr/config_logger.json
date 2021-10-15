@@ -2,11 +2,10 @@
   "name": "default_config",
   "n_gpu": 1,
   "preprocessing": {
-    "sr": 22050,
+    "sr": 16000,
     "spectrogram": {
       "type": "MelSpectrogram",
       "args": {
-        "n_mels": 64
       }
     }
   },
@@ -15,45 +14,48 @@
     "spectrogram": []
   },
   "arch": {
-    "type": "QuartzNet",
+    "type": "BaselineModel",
     "args": {
-      "n_feats": 64
+      "n_feats": 128,
+      "fc_hidden": 512
     }
   },
   "data": {
     "train": {
-      "batch_size": 64,
+      "batch_size": 20,
       "num_workers": 5,
       "datasets": [
         {
-          "type": "LJSpeechDataset",
+          "type": "LibrispeechDataset",
           "args": {
-            "max_audio_length": 5.0,
+            "part": "train-clean-100",
+            "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 64
+            "limit": 2
           }
         }
       ]
     },
     "val": {
-      "batch_size": 64,
+      "batch_size": 20,
       "num_workers": 5,
       "datasets": [
         {
-          "type": "LJSpeechDataset",
+          "type": "LibrispeechDataset",
           "args": {
-            "max_audio_length": 5.0,
+            "part": "dev-clean",
+            "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 64
+            "limit": 2
           }
         }
       ]
     }
   },
   "optimizer": {
-    "type": "Adam",
+    "type": "SGD",
     "args": {
-      "lr": 2e-2
+      "lr": 3e-4
     }
   },
   "loss": {
@@ -75,10 +77,13 @@
     }
   ],
   "lr_scheduler": {
-    "type": "StepLR",
+    "type": "OneCycleLR",
     "args": {
-      "step_size": 300,
-      "gamma": 0.5
+      "steps_per_epoch": 100,
+      "epochs": 50,
+      "anneal_strategy": "cos",
+      "max_lr": 4e-3,
+      "pct_start": 0.2
     }
   },
   "trainer": {
@@ -89,7 +94,7 @@
     "monitor": "min val_loss",
     "early_stop": 100,
     "writer": "wandb",
-    "len_epoch": 30,
+    "len_epoch": 5,
     "grad_norm_clip": 10
   }
 }

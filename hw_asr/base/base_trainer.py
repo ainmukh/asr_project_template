@@ -4,7 +4,8 @@ import torch
 from numpy import inf
 
 from hw_asr.base import BaseModel
-from hw_asr.logger import TensorboardWriter
+# from hw_asr.logger import TensorboardWriter
+from hw_asr.logger import Writer
 
 
 class BaseTrainer:
@@ -48,8 +49,11 @@ class BaseTrainer:
         self.checkpoint_dir = config.save_dir
 
         # setup visualization writer instance
-        self.writer = TensorboardWriter(
-            config.log_dir, self.logger, cfg_trainer["tensorboard"]
+        # self.writer = TensorboardWriter(
+        #     config.log_dir, self.logger, cfg_trainer["tensorboard"]
+        # )
+        self.writer = Writer(
+            config.log_dir, self.logger, cfg_trainer["writer"]
         )
 
         if config.resume is not None:

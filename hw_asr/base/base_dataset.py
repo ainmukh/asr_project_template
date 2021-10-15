@@ -58,11 +58,16 @@ class BaseDataset(Dataset):
         audio_path = data_dict["path"]
         audio_wave = self.load_audio(audio_path)
         audio_wave, audio_spec = self.process_wave(audio_wave)
+        text = self.process_text(data_dict['text'])
+        # x = 'Hello?? You\'re here, aren\'t you?'
+        # print(x)
+        # exit(print(self.process_text(x)))
         return {
             "audio": audio_wave,
             "spectrogram": audio_spec,
             "duration": data_dict["audio_len"],
-            "text": data_dict["text"],
+            # "text": data_dict["text"],
+            "text": text,
             "text_encoded": self.text_encoder.encode(data_dict["text"]),
             "audio_path": audio_path,
         }
@@ -81,6 +86,14 @@ class BaseDataset(Dataset):
         if sr != target_sr:
             audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
         return audio_tensor
+
+    # https: // pytorch.org / text / _modules / torchtext / data / utils.html
+    def process_text(self, text: str):
+        text = text.lower()
+        symbols = ['?', '!', '.', '...', ',', ')', '(', '\'']
+        for sym in symbols:
+            text = text.replace(sym, '')
+        return text
 
     def process_wave(self, audio_tensor_wave: Tensor):
         with torch.no_grad():
