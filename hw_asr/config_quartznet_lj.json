@@ -1,5 +1,5 @@
 {
-  "name": "default_config",
+  "name": "quartznet_config",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 22050,
@@ -82,7 +82,7 @@
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 10,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
