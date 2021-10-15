@@ -90,9 +90,12 @@ class BaseDataset(Dataset):
     # https: // pytorch.org / text / _modules / torchtext / data / utils.html
     def process_text(self, text: str):
         text = text.lower()
-        symbols = ['?', '!', '.', '...', ',', ')', '(', '\'', '-', '–', ':', ';']
-        for sym in symbols:
+        symbols_space = ['?', '!', '.', '...', ',', ':', ';']
+        symbols_empty = ['-', '–', '\'', '(', ')']
+        for sym in symbols_space:
             text = text.replace(sym, ' ')
+        for sym in symbols_empty:
+            text = text.replace(sym, '')
         if text[-1] == ' ':
             text = text[:-1]
         return text
