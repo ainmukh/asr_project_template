@@ -13,3 +13,4 @@ editdistance
 
 Levenshtein
 jiwer
+wandb
