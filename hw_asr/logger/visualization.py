@@ -3,9 +3,10 @@ from datetime import datetime
 
 
 class Writer:
-    def __init__(self, log_dir, logger, name):
+    def __init__(self, log_dir, logger, name, project_name):
         self.writer = None
         self.selected_module = ""
+        self.text_table = None
         modules = ['wandb'] if name == 'wandb' else ["torch.utils.tensorboard", "tensorboardX"]
 
         # Retrieve vizualization writer.
@@ -18,7 +19,7 @@ class Writer:
                         self.writer = self.writer.SummaryWriter(str(log_dir))
                     succeeded = True
                     if name == 'wandb':
-                        self.writer.init(project="my-test-project")
+                        self.writer.init(project=project_name)
                     self.selected_module = module
                     break
                 except ImportError:
@@ -81,7 +82,10 @@ class Writer:
                         # add mode(train/valid) tag
                         if name not in self.tag_mode_exceptions:
                             tag = "{}/{}".format(tag, self.mode)
-                        add_data(tag, data, self.step, *args, **kwargs)
+                        if name == 'add_text':
+                            add_data(tag, data)
+                        else:
+                            add_data(tag, data, self.step, *args, **kwargs)
 
             else:
                 add_data = getattr(self.writer, 'log')
@@ -95,8 +99,10 @@ class Writer:
                     elif name == 'add_image':
                         add_data({tag: self.writer.Image(data)}, step=self.step)
                     elif name == 'add_text':
-                        print(data)
-                        add_data({tag: self.writer.Html(data)}, step=self.step)
+                        columns = ["Target", "Prediction", "WER", "CER"]
+                        table = self.writer.Table(data=data, columns=columns)
+                        add_data({tag: table}, step=self.step)
+                        # add_data({tag: self.writer.Html(data)}, step=self.step)
                     else:
                         add_data({tag: data}, step=self.step)
 

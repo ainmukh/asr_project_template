@@ -53,7 +53,7 @@ class BaseTrainer:
         #     config.log_dir, self.logger, cfg_trainer["tensorboard"]
         # )
         self.writer = Writer(
-            config.log_dir, self.logger, cfg_trainer["writer"]
+            config.log_dir, self.logger, cfg_trainer["writer"], cfg_trainer['project_name']
         )
 
         if config.resume is not None:

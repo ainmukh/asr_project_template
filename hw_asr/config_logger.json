@@ -31,7 +31,7 @@
             "part": "train-clean-100",
             "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 2
+            "limit": 64
           }
         }
       ]
@@ -46,7 +46,7 @@
             "part": "dev-clean",
             "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 2
+            "limit": 64
           }
         }
       ]

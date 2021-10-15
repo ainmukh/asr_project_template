@@ -235,14 +235,19 @@ class Trainer(BaseTrainer):
         shuffle(tuples)
         to_log_pred = []
         to_log_pred_raw = []
+        to_log_as_table = []
         for pred, target, raw_pred in tuples[:examples_to_log]:
             wer = jiwer.wer(target, pred) * 100
             cer = calc_cer(target, pred) * 100
             to_log_pred.append(
                 f"true: '{target}' | pred: '{pred}' " f"| wer: {wer:.2f} | cer: {cer:.2f}")
             to_log_pred_raw.append(f"true: '{target}' | pred: '{raw_pred}'\n")
-        self.writer.add_text(f"predictions", '< < < < > > > >'.join(to_log_pred))
-        self.writer.add_text(f"predictions_raw", '< < < < > > > >'.join(to_log_pred_raw))
+            to_log_as_table.append([target, pred, f'{wer:.2f}', f'{cer:.2f}'])
+        if self.writer.selected_module == 'wandb':
+            self.writer.add_text("predictions", to_log_as_table)
+        else:
+            self.writer.add_text(f"predictions", '< < < < > > > >'.join(to_log_pred))
+            self.writer.add_text(f"predictions_raw", '< < < < > > > >'.join(to_log_pred_raw))
 
     def _log_spectrogram(self, spectrogram_batch):
         spectrogram = random.choice(spectrogram_batch)
