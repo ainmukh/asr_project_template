@@ -13,4 +13,5 @@ editdistance
 
 Levenshtein
 jiwer
+protobuf>=3.12.0
 wandb
