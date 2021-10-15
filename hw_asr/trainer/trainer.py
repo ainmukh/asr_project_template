@@ -242,7 +242,7 @@ class Trainer(BaseTrainer):
             to_log_pred.append(
                 f"true: '{target}' | pred: '{pred}' " f"| wer: {wer:.2f} | cer: {cer:.2f}")
             to_log_pred_raw.append(f"true: '{target}' | pred: '{raw_pred}'\n")
-            to_log_as_table.append([target, pred, f'{wer:.2f}', f'{cer:.2f}'])
+            to_log_as_table.append([f'\'{target}\'', f'\'{pred}\'', f'{wer:.2f}', f'{cer:.2f}'])
         if self.writer.selected_module == 'wandb':
             self.writer.add_text("predictions", to_log_as_table)
         else:
