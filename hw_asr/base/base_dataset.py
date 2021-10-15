@@ -92,7 +92,7 @@ class BaseDataset(Dataset):
         text = text.lower()
         symbols = ['?', '!', '.', '...', ',', ')', '(', '\'', '-', '–', ':', ';']
         for sym in symbols:
-            text = text.replace(sym, '')
+            text = text.replace(sym, ' ')
         if text[-1] == ' ':
             text = text[:-1]
         return text
