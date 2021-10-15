@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 
 import numpy as np
 import torch
@@ -96,6 +97,7 @@ class BaseDataset(Dataset):
             text = text.replace(sym, ' ')
         for sym in symbols_empty:
             text = text.replace(sym, '')
+        text = re.sub("\s\s+", " ", text)
         if text[-1] == ' ':
             text = text[:-1]
         return text
