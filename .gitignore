@@ -21,6 +21,7 @@ parts/
 sdist/
 var/
 wheels/
+
 *.egg-info/
 .installed.cfg
 *.egg
@@ -104,6 +105,7 @@ ENV/
 data/
 input/
 saved/
+wand/
 
 # editor, os cache directory
 .vscode/
