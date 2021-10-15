@@ -101,11 +101,11 @@ class Trainer(BaseTrainer):
         self.train_metrics.update("grad norm", self.get_grad_norm())
 
         if batch_num % self.log_step == 0 and batch_num:
-            self.logger.debug(
-                "Train Epoch: {} {} Loss: {:.6f}".format(
-                    epoch, self._progress(batch_num), loss.item()
-                )
-            )
+            # self.logger.debug(
+            #     "Train Epoch: {} {} Loss: {:.6f}".format(
+            #         epoch, self._progress(batch_num), loss.item()
+            #     )
+            # )
             self.writer.add_scalar(
                 "learning rate", self.lr_scheduler.get_last_lr()[0]
             )
