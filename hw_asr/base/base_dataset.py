@@ -90,9 +90,11 @@ class BaseDataset(Dataset):
     # https: // pytorch.org / text / _modules / torchtext / data / utils.html
     def process_text(self, text: str):
         text = text.lower()
-        symbols = ['?', '!', '.', '...', ',', ')', '(', '\'']
+        symbols = ['?', '!', '.', '...', ',', ')', '(', '\'', '-', '–', ':', ';']
         for sym in symbols:
             text = text.replace(sym, '')
+        if text[-1] == ' ':
+            text = text[:-1]
         return text
 
     def process_wave(self, audio_tensor_wave: Tensor):

@@ -89,7 +89,7 @@
     "monitor": "min val_loss",
     "early_stop": 100,
     "writer": "wandb",
-    "project_name": "hw1_chk1.2",
+    "project_name": "hw1_chk1.3",
     "len_epoch": 30,
     "grad_norm_clip": 10
   }
