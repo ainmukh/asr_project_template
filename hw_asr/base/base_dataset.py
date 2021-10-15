@@ -91,8 +91,8 @@ class BaseDataset(Dataset):
     # https: // pytorch.org / text / _modules / torchtext / data / utils.html
     def process_text(self, text: str):
         text = text.lower()
-        symbols_space = ['?', '!', '.', '...', ',', ':', ';']
-        symbols_empty = ['-', '–', '\'', '(', ')']
+        symbols_space = ['?', '!', '.', '...', ',', ':', ';', '–']
+        symbols_empty = ['-', '\'', '(', ')']
         for sym in symbols_space:
             text = text.replace(sym, ' ')
         for sym in symbols_empty:

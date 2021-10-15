@@ -1,5 +1,5 @@
 {
-  "name": "quartznet_config",
+  "name": "quartznet_lj_config",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 22050,
