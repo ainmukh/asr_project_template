@@ -105,7 +105,7 @@ ENV/
 data/
 input/
 saved/
-wand/
+wandb/
 
 # editor, os cache directory
 .vscode/
