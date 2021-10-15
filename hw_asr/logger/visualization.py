@@ -94,6 +94,9 @@ class Writer:
                         add_data({tag: self.writer.Histogram(data.cpu().detach().numpy())}, step=self.step)
                     elif name == 'add_image':
                         add_data({tag: self.writer.Image(data)}, step=self.step)
+                    elif name == 'add_text':
+                        print(data)
+                        add_data({tag: self.writer.Html(data)}, step=self.step)
                     else:
                         add_data({tag: data}, step=self.step)
 
