@@ -91,7 +91,7 @@ class Writer:
                         if name not in self.tag_mode_exceptions:
                             tag = "{}/{}".format(tag, self.mode)
                     if name == 'add_histogram':
-                        add_data({tag: self.writer.Histogram(data.cpu())}, step=self.step)
+                        add_data({tag: self.writer.Histogram(data.cpu().detach().numpy())}, step=self.step)
                     elif name == 'add_image':
                         add_data({tag: self.writer.Image(data)}, step=self.step)
                     else:
