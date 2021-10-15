@@ -247,7 +247,7 @@ class Trainer(BaseTrainer):
             to_log_as_table.append([f'\'{target}\'', f'\'{pred}\'', f'{wer:.2f}', f'{cer:.2f}'])
         idx = np.argmax(cer)
         print(f'target: {to_log_as_table[idx][0]}')
-        print(f'pred: {to_log_as_table[idx][0]}')
+        print(f'pred: {to_log_as_table[idx][1]}')
         if self.writer.selected_module == 'wandb':
             self.writer.add_text("predictions", to_log_as_table)
         else:
