@@ -14,6 +14,8 @@ from hw_asr.logger.utils import plot_spectrogram_to_buf
 from hw_asr.metric.utils import calc_cer
 from hw_asr.utils import inf_loop, MetricTracker
 
+import numpy as np
+
 
 class Trainer(BaseTrainer):
     """
@@ -243,6 +245,9 @@ class Trainer(BaseTrainer):
                 f"true: '{target}' | pred: '{pred}' " f"| wer: {wer:.2f} | cer: {cer:.2f}")
             to_log_pred_raw.append(f"true: '{target}' | pred: '{raw_pred}'\n")
             to_log_as_table.append([f'\'{target}\'', f'\'{pred}\'', f'{wer:.2f}', f'{cer:.2f}'])
+        idx = np.argmax(cer)
+        print(f'target: {to_log_as_table[idx][0]}')
+        print(f'pred: {to_log_as_table[idx][0]}')
         if self.writer.selected_module == 'wandb':
             self.writer.add_text("predictions", to_log_as_table)
         else:

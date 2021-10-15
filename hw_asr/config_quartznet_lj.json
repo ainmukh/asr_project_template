@@ -22,29 +22,29 @@
   },
   "data": {
     "train": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 5,
       "datasets": [
         {
           "type": "LJSpeechDataset",
           "args": {
-            "max_audio_length": 2.5,
+            "max_audio_length": 5,
             "max_text_length": 200,
-            "limit": 32
+            "limit": 64
           }
         }
       ]
     },
     "val": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 5,
       "datasets": [
         {
           "type": "LJSpeechDataset",
           "args": {
-            "max_audio_length": 2.5,
+            "max_audio_length": 5,
             "max_text_length": 200,
-            "limit": 32
+            "limit": 64
           }
         }
       ]
