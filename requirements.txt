@@ -20,4 +20,3 @@ librosa
 sortedcontainers
 https://github.com/kpu/kenlm/archive/master.zip
 youtokentome
-git+https://github.com/asokol123/ctcdecoder
