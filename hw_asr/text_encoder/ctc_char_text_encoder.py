@@ -40,6 +40,7 @@ class CTCCharTextEncoder(CharTextEncoder):
         assert voc_size == len(self.ind2char)
 
         alphabet = ''.join(self.ind2char.values())
+        probs = probs.exp()
         probs = probs.cpu().detach().numpy()
         # hypos = [(1., '', '^')]
         # for i in tqdm(range(probs.shape[0])):
