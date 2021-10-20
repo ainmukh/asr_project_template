@@ -106,6 +106,7 @@ data/
 input/
 saved/
 wandb/
+default_test_model/
 
 # editor, os cache directory
 .vscode/
