@@ -33,7 +33,8 @@ class Trainer(BaseTrainer):
             valid_data_loader=None,
             lr_scheduler=None,
             len_epoch=None,
-            skip_oom=True
+            skip_oom=True,
+            sr=16000
     ):
         super().__init__(model, criterion, metrics, optimizer, config, device)
         self.skip_oom = skip_oom
@@ -50,7 +51,7 @@ class Trainer(BaseTrainer):
         self.valid_data_loader = valid_data_loader
         self.do_validation = self.valid_data_loader is not None
         self.lr_scheduler = lr_scheduler
-        self.log_step = 2
+        self.log_step = 1
 
         self.train_metrics = MetricTracker(
             "loss", "grad norm", *[m.name for m in self.metrics], writer=self.writer
@@ -58,6 +59,7 @@ class Trainer(BaseTrainer):
         self.valid_metrics = MetricTracker(
             "loss", *[m.name for m in self.metrics], writer=self.writer
         )
+        self.sr = sr
 
     @staticmethod
     def move_batch_to_device(batch, device: torch.device):
@@ -80,7 +82,6 @@ class Trainer(BaseTrainer):
     def _train_iteration(self, batch: dict, epoch: int, batch_num: int):
         batch = self.move_batch_to_device(batch, self.device)
         self.optimizer.zero_grad()
-
         batch["logits"] = self.model(**batch)
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
         batch["log_probs_length"] = self.model.transform_input_lengths(
@@ -213,6 +214,12 @@ class Trainer(BaseTrainer):
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
 
+    def _log_audio(self, audio, text, examples_to_log=3):
+        for i in range(examples_to_log):
+            self.write.add_audio(
+                'audio', audio, caption=text[i], sample_rate=self.sr
+            )
+
     def _log_predictions(
             self,
             text,
@@ -225,8 +232,12 @@ class Trainer(BaseTrainer):
         # TODO: implement logging of beam search results
         if self.writer is None:
             return
+        pred_texts = []
+        for i in range(log_probs.size(0)):
+            pred = self.text_encoder.beam_search(log_probs[i])[0]
+            pred_texts.append(pred)
         predictions = log_probs.cpu().argmax(-1)
-        pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
+        # pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
         argmax_pred_texts = [
             self.text_encoder.decode(p)[: int(l)]
             for p, l in zip(predictions, log_probs_length)

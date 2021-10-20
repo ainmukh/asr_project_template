@@ -69,7 +69,8 @@ class BaseDataset(Dataset):
             "duration": data_dict["audio_len"],
             # "text": data_dict["text"],
             "text": text,
-            "text_encoded": self.text_encoder.encode(data_dict["text"]),
+            # "text_encoded": self.text_encoder.encode(data_dict["text"]),
+            "text_encoded": self.text_encoder.encode(text),
             "audio_path": audio_path,
         }
 

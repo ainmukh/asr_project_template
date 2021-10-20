@@ -52,6 +52,7 @@ class Writer:
             "add_histogram",
             "add_pr_curve",
             "add_embedding",
+            "add_audio"
         }
         self.tag_mode_exceptions = {"add_histogram", "add_embedding"}
         self.timer = datetime.now()
@@ -74,7 +75,7 @@ class Writer:
             return a blank function handle that does nothing
         """
         if name in self.tb_writer_ftns:
-            if self.selected_module != 'wandb':
+            if self.selected_module != 'wandb' and name != "add_audio":
                 add_data = getattr(self.writer, name, None)
 
                 def wrapper(tag, data, *args, **kwargs):
@@ -103,6 +104,13 @@ class Writer:
                         table = self.writer.Table(data=data, columns=columns)
                         add_data({tag: table}, step=self.step)
                         # add_data({tag: self.writer.Html(data)}, step=self.step)
+                    elif name == "add_audio":
+                        audio = self.writer.Audio(
+                            data.cpu().detach().numpy(),
+                            caption=kwargs["caption"],
+                            sample_rate=kwargs["sample_rate"]
+                        )
+                        add_data({tag: audio})
                     else:
                         add_data({tag: data}, step=self.step)
 

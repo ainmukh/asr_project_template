@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import torch
+import torch.nn.functional as F
 from tqdm import tqdm
 
 from hw_asr.datasets.utils import get_dataloaders
@@ -11,11 +12,12 @@ import hw_asr.model as module_model
 import hw_asr.loss as module_loss
 import hw_asr.metric as module_metric
 from hw_asr.trainer import Trainer
+from hw_asr.utils import prepare_device
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.parse_config import ConfigParser
 
 DEFAULT_TEST_CONFIG_PATH = ROOT_PATH / "default_test_config.json"
-DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
+DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "model_best.pth"
 
 
 def main(config, out_file):
@@ -31,9 +33,16 @@ def main(config, out_file):
     model = config.init_obj(config["arch"], module_model, n_class=len(text_encoder))
     logger.info(model)
 
+    device, device_ids = prepare_device(config["n_gpu"])
+
     # get function handles of loss and metrics
-    loss_fn = getattr(module_loss, config["loss"])
-    metric_fns = [getattr(module_metric, met) for met in config["metrics"]]
+    # loss_fn = getattr(module_loss, config["loss"])
+    loss_fn = config.init_obj(config["loss"], module_loss).to(device)
+    # metric_fns = [getattr(module_metric, met) for met in config["metrics"]]
+    metric_fns = [
+        config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
+        for metric_dict in config["metrics"]
+    ]
 
     logger.info("Loading checkpoint: {} ...".format(config.resume))
     checkpoint = torch.load(config.resume)
@@ -52,18 +61,20 @@ def main(config, out_file):
     with torch.no_grad():
         for i, batch in enumerate(tqdm(dataloaders["test"])):
             batch = Trainer.move_batch_to_device(batch, device)
-            batch["log_probs"] = model(**batch)
+            batch["logits"] = model(**batch)
+            batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
             batch["log_probs_length"] = model.transform_input_lengths(
                 batch["spectrogram_length"]
             )
             batch["probs"] = batch["log_probs"].exp().cpu()
             batch["argmax"] = batch["probs"].argmax(-1)
-            for i in range(len(batch["text"])):
+            for j in range(len(batch["text"])):
+                print('INSIDE BATCH')
                 results.append({
-                    "ground_trurh": batch["text"][i],
-                    "pred_text_argmax": text_encoder.ctc_decode(batch["argmax"][i]),
-                    "pred_text_beam_search": text_encoder.ctc_beam_search(
-                        batch["probs"], beam_size=100
+                    "ground_trurh": batch["text"][j],
+                    "pred_text_argmax": text_encoder.decode(batch["argmax"][j]),
+                    "pred_text_beam_search": text_encoder.beam_search(
+                        batch["probs"][j], beam_size=100
                     )[:10],
 
                 })
@@ -124,9 +135,9 @@ if __name__ == "__main__":
         help="Number of workers for test dataloader"
     )
 
+    config = ConfigParser.from_args(args)
+    args = args.parse_args()
     test_data_folder = Path(args.test_data_folder)
-
-    config = ConfigParser.from_args(DEFAULT_TEST_CONFIG_PATH)
     config.config["data"] = {
         "test": {
             "batch_size": args.batch_size,

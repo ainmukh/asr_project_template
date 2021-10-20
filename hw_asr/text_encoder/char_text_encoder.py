@@ -3,17 +3,23 @@ from pathlib import Path
 from string import ascii_lowercase
 from typing import List, Union
 
+import os
 import numpy as np
 from torch import Tensor
+import kenlm
 
 from hw_asr.base.base_text_encoder import BaseTextEncoder
 
 
 class CharTextEncoder(BaseTextEncoder):
 
-    def __init__(self, alphabet: List[str]):
+    def __init__(self, alphabet: List[str], lm_path: str):
         self.ind2char = {k: v for k, v in enumerate(sorted(alphabet))}
         self.char2ind = {v: k for k, v in self.ind2char.items()}
+        self.lm = None
+        if len(lm_path) != 0:
+            lm_path = os.path.join(lm_path)
+            self.lm = kenlm.LanguageModel(lm_path)
 
     def __len__(self):
         return len(self.ind2char)
@@ -48,5 +54,5 @@ class CharTextEncoder(BaseTextEncoder):
         return a
 
     @classmethod
-    def get_simple_alphabet(cls):
-        return cls(alphabet=list(ascii_lowercase + ' '))
+    def get_simple_alphabet(cls, lm_path: str = ''):
+        return cls(alphabet=list(ascii_lowercase + ' '), lm_path=lm_path)

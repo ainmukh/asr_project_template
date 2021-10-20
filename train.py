@@ -29,7 +29,10 @@ def main(config):
     logger = config.get_logger("train")
 
     # text_encoder
-    text_encoder = CTCCharTextEncoder.get_simple_alphabet()
+    lm_path = ''
+    if "lm_path" in config['arch']['args']:
+        lm_path = config['arch']['args']['lm_path']
+    text_encoder = CTCCharTextEncoder.get_simple_alphabet(lm_path=lm_path)
 
     # setup data_loader instances
     dataloaders = get_dataloaders(config, text_encoder)
@@ -67,7 +70,8 @@ def main(config):
         data_loader=dataloaders["train"],
         valid_data_loader=dataloaders["train"],
         lr_scheduler=lr_scheduler,
-        len_epoch=config["trainer"].get("len_epoch", None)
+        len_epoch=config["trainer"].get("len_epoch", None),
+        sr=config["preprocessing"]["sr"]
     )
 
     trainer.train()

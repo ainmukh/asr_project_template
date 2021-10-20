@@ -10,19 +10,27 @@
     }
   },
   "augmentations": {
-    "wave": [],
-    "spectrogram": []
+    "wave": [
+      {"type": "Gain", "args": {"p": 0.1, "sr": 16000}},
+      {"type": "Noise", "args": {"p": 0.1, "noise_name": "trumpet", "noise_level": 20}},
+      {"type": "PitchShifting", "args": {"p": 0.1, "sr": 16000, "n_steps": -5}}
+    ],
+    "spectrogram": [
+      {"type": "FrequencyMasking", "args": {"p": 0.1, "frequency": 20}},
+      {"type": "TimeMasking", "args": {"p": 0.1, "time": 100}}
+    ]
   },
   "arch": {
     "type": "BaselineModel",
     "args": {
       "n_feats": 128,
-      "fc_hidden": 512
+      "fc_hidden": 512,
+      "lm_path": ""
     }
   },
   "data": {
     "train": {
-      "batch_size": 20,
+      "batch_size": 2,
       "num_workers": 5,
       "datasets": [
         {
@@ -30,7 +38,8 @@
           "args": {
             "part": "train-clean-100",
             "max_audio_length": 20.0,
-            "max_text_length": 200
+            "max_text_length": 200,
+            "limit": 2
           }
         }
       ]
@@ -44,7 +53,8 @@
           "args": {
             "part": "dev-clean",
             "max_audio_length": 20.0,
-            "max_text_length": 200
+            "max_text_length": 200,
+            "limit": 2
           }
         }
       ]
@@ -91,7 +101,8 @@
     "verbosity": 2,
     "monitor": "min val_loss",
     "early_stop": 100,
-    "tensorboard": true,
+    "writer": "tensorboard",
+    "project_name": "hw1_chk1.3",
     "len_epoch": 100,
     "grad_norm_clip": 10
   }
