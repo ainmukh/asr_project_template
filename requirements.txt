@@ -18,5 +18,5 @@ wandb
 
 librosa
 sortedcontainers
-kenlm
+https://github.com/kpu/kenlm/archive/master.zip
 youtokentome
