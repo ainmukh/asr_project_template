@@ -23,7 +23,7 @@ class Noise(AugmentationBase):
             audio_energy = torch.norm(data)
             alpha = (audio_energy / self.noise_energy) * torch.pow(10, -self.noise_level / 20)
             clipped_wav = data[..., :self.noise.size(1)]
-            clipped_noise = self.noise[:data.size(1)]
+            clipped_noise = self.noise[:, :clipped_wav.size(1)]
             res = clipped_wav + alpha * clipped_noise
             return torch.clamp(res, -1, 1)
         else:

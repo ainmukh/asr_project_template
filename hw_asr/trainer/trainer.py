@@ -222,6 +222,7 @@ class Trainer(BaseTrainer):
 
     def _log_predictions(
             self,
+            part,
             text,
             log_probs,
             log_probs_length,
@@ -232,12 +233,16 @@ class Trainer(BaseTrainer):
         # TODO: implement logging of beam search results
         if self.writer is None:
             return
-        pred_texts = []
-        for i in range(log_probs.size(0)):
-            pred = self.text_encoder.beam_search(log_probs[i])[0]
-            pred_texts.append(pred)
+
         predictions = log_probs.cpu().argmax(-1)
-        # pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
+        if part == "val":
+            pred_texts = []
+            for i in range(log_probs.size(0)):
+                pred = self.text_encoder.beam_search(log_probs[i])[0][0]
+                pred_texts.append(pred)
+        else:
+            pred_texts = [self.text_encoder.decode(p) for p in predictions]
+
         argmax_pred_texts = [
             self.text_encoder.decode(p)[: int(l)]
             for p, l in zip(predictions, log_probs_length)
