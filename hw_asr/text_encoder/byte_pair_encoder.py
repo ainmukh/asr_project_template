@@ -10,7 +10,6 @@ from torch import Tensor
 import kenlm
 import torch
 
-import re
 from tqdm.auto import tqdm
 import youtokentome as yttm
 from sortedcontainers import SortedSet

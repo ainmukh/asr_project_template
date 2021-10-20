@@ -107,8 +107,12 @@ input/
 saved/
 wandb/
 default_test_model/
+hw_asr/pretrained/
 
 # editor, os cache directory
 .vscode/
 .idea/
 __MACOSX/
+
+.DS_Store
+hw_asr/.DS_Store

@@ -24,7 +24,8 @@
   "arch": {
     "type": "QuartzNet",
     "args": {
-      "n_feats": 128
+      "n_feats": 128,
+      "lm_path": ""
     }
   },
   "data": {

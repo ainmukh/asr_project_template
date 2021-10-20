@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from numba import jit
 import torch
 from tqdm import tqdm
 import numpy as np
@@ -7,8 +6,6 @@ import numpy as np
 from hw_asr.text_encoder.char_text_encoder import CharTextEncoder
 
 from sortedcontainers import SortedSet
-from ctcdecoder import beam_search
-import fast_ctc_decode
 
 
 class CTCCharTextEncoder(CharTextEncoder):
