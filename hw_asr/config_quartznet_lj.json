@@ -12,9 +12,9 @@
   },
   "augmentations": {
     "wave": [
-      {"type": "Gain", "args": {"p": 0.1, "sr": 16000}},
+      {"type": "Gain", "args": {"p": 0.1, "sr": 22050}},
       {"type": "Noise", "args": {"p": 0.1, "noise_name": "trumpet", "noise_level": 20}},
-      {"type": "PitchShifting", "args": {"p": 0.1, "sr": 16000, "n_steps": -5}}
+      {"type": "PitchShifting", "args": {"p": 0.1, "sr": 22050, "n_steps": -5}}
     ],
     "spectrogram": [
       {"type": "FrequencyMasking", "args": {"p": 0.1, "frequency": 20}},
@@ -25,7 +25,7 @@
     "type": "QuartzNet",
     "args": {
       "n_feats": 64,
-      "lm_path": ""
+      "lm_path": "hw_asr/pretrained/lm.binary"
     }
   },
   "data": {
@@ -61,7 +61,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 2e-2
+      "lr": 5e-3
     }
   },
   "loss": {
@@ -88,7 +88,7 @@
       "steps_per_epoch": 50,
       "epochs": 30,
       "anneal_strategy": "cos",
-      "max_lr": 2e-2,
+      "max_lr": 5e-3,
       "pct_start": 0.15
     }
   },
@@ -100,7 +100,7 @@
     "monitor": "min val_loss",
     "early_stop": 100,
     "writer": "wandb",
-    "project_name": "hw1_chk2.0",
+    "project_name": "hw1_chk2.1",
     "len_epoch": 50,
     "grad_norm_clip": 10
   }
