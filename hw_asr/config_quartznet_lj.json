@@ -6,7 +6,7 @@
     "spectrogram": {
       "type": "MelSpectrogram",
       "args": {
-        "n_mels": 128
+        "n_mels": 64
       }
     }
   },
@@ -24,13 +24,13 @@
   "arch": {
     "type": "QuartzNet",
     "args": {
-      "n_feats": 128,
+      "n_feats": 64,
       "lm_path": ""
     }
   },
   "data": {
     "train": {
-      "batch_size": 64,
+      "batch_size": 32,
       "num_workers": 5,
       "datasets": [
         {
@@ -44,7 +44,7 @@
       ]
     },
     "val": {
-      "batch_size": 64,
+      "batch_size": 32,
       "num_workers": 5,
       "datasets": [
         {
@@ -85,7 +85,7 @@
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
-      "steps_per_epoch": 300,
+      "steps_per_epoch": 50,
       "epochs": 30,
       "anneal_strategy": "cos",
       "max_lr": 2e-2,
@@ -101,7 +101,7 @@
     "early_stop": 100,
     "writer": "wandb",
     "project_name": "hw1_chk2.0",
-    "len_epoch": 300,
+    "len_epoch": 50,
     "grad_norm_clip": 10
   }
 }

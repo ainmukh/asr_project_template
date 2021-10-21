@@ -110,10 +110,10 @@ class Writer:
                             audio = self.writer.Audio(
                                 sample.cpu().detach().numpy(),
                                 caption=kwargs["caption"][i],
-                                sample_rate=kwargs["sample_rate"][i]
+                                sample_rate=kwargs["sample_rate"]
                             )
                             to_log.append(audio)
-                        add_data({tag: to_log})
+                        add_data({tag: to_log}, step=self.step)
                     else:
                         add_data({tag: data}, step=self.step)
 
