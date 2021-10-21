@@ -85,10 +85,10 @@
   "lr_scheduler": {
     "type": "OneCycleLR",
     "args": {
-      "steps_per_epoch": 150,
+      "steps_per_epoch": 300,
       "epochs": 30,
       "anneal_strategy": "cos",
-      "max_lr": 5e-2,
+      "max_lr": 2e-2,
       "pct_start": 0.15
     }
   },
