@@ -67,7 +67,7 @@ class LJSpeechDataset(BaseDataset):
         #     df = pd.read_csv(self._data_dir / "metadata.csv", sep='|', header=None)
         # else:
         self.df.fillna(pass_token, inplace=True)
-        df = self.df
+        df = self.df[:11000] if self.split == "train" else self.df[11000:]
         wav_dir = self._data_dir / 'wavs'
         for wav_id in tqdm(df[0]):
             if df[df[0] == wav_id][2].values[0] == pass_token:
