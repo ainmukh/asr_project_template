@@ -172,16 +172,6 @@ class Trainer(BaseTrainer):
                     batch["spectrogram_length"]
                 )  # // 2
                 loss = self.criterion(**batch)
-                # print('x =', torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1).size())
-                # print('y =', batch['text_encoded'][0, :].size())
-                # print('batch["log_probs_length"][0]', batch["log_probs_length"][0])
-                # print('batch["text_encoded_length"][0]', batch["text_encoded_length"][0])
-                # print('loss =', torch.nn.CTCLoss()(
-                #     torch.transpose(batch["log_probs"], 0, 1)[:, 0, :].unsqueeze(1),
-                #     batch['text_encoded'][0, :].unsqueeze(0),
-                #     batch["log_probs_length"][0],
-                #     batch["text_encoded_length"][0]
-                # ))
 
                 self.valid_metrics.update("loss", loss.item(), n=len(batch["text"]))
                 for met in self.metrics:
@@ -189,16 +179,8 @@ class Trainer(BaseTrainer):
             self.writer.set_step(epoch * self.len_epoch, "valid")
             self._log_scalars(self.valid_metrics)
             self._log_predictions(part="val", **batch)
-            self._log_audio(batch["audio"], batch["text"])
-
-            # predictions = batch['log_probs'].cpu().argmax(-1)
-            # print(predictions[0])
-            # print(batch['text_encoded'][0])
-            # pred_texts = [self.text_encoder.ctc_decode(p) for p in predictions]
-            # print('pred', pred_texts[0])
-            # print('targ', batch['text'][0])
-
             self._log_spectrogram(batch["spectrogram"])
+            self._log_audio(batch["audio"], batch["text"])
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
@@ -216,10 +198,9 @@ class Trainer(BaseTrainer):
         return base.format(current, total, 100.0 * current / total)
 
     def _log_audio(self, audio, text, examples_to_log=3):
-        for i in range(examples_to_log):
-            self.write.add_audio(
-                'audio', audio[i], caption=text[i], sample_rate=self.sr
-            )
+        self.writer.add_audio(
+            'audio', audio[:examples_to_log], caption=text[:examples_to_log], sample_rate=self.sr
+        )
 
     def _log_predictions(
             self,
