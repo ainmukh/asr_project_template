@@ -13,6 +13,8 @@ from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
 from hw_asr.trainer import Trainer
 from hw_asr.utils import prepare_device
 from hw_asr.utils.parse_config import ConfigParser
+from sklearn.model_selection import train_test_split
+import pandas as pd
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -35,6 +37,14 @@ def main(config):
     text_encoder = CTCCharTextEncoder.get_simple_alphabet(lm_path=lm_path)
 
     # setup data_loader instances
+    if config["data"]["train"]["datasets"][0]["type"] == "LJSpeechDataset":
+        df = pd.read_csv("data/datasets/ljspeech/metadata.csv")
+        x_train, x_test = train_test_split(df, test_size=0.1, random_state=SEED)
+        x_train.to_csv("data/datasets/ljspeech/traindata.csv", sep="|", header=False)
+        x_test.to_csv("data/datasets/ljspeech/testdata.csv", sep="|", header=False)
+        config["data"]["train"]["datasets"][0]["args"] = "data/datasets/ljspeech/traindata.csv"
+        config["data"]["val"]["datasets"][0]["args"] = "data/datasets/ljspeech/testdata.csv"
+
     dataloaders = get_dataloaders(config, text_encoder)
 
     # build model architecture, then print to console
