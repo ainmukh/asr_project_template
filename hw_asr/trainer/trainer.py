@@ -189,6 +189,7 @@ class Trainer(BaseTrainer):
             self.writer.set_step(epoch * self.len_epoch, "valid")
             self._log_scalars(self.valid_metrics)
             self._log_predictions(part="val", **batch)
+            self._log_audio(batch["audio"], batch["text"])
 
             # predictions = batch['log_probs'].cpu().argmax(-1)
             # print(predictions[0])
@@ -217,7 +218,7 @@ class Trainer(BaseTrainer):
     def _log_audio(self, audio, text, examples_to_log=3):
         for i in range(examples_to_log):
             self.write.add_audio(
-                'audio', audio, caption=text[i], sample_rate=self.sr
+                'audio', audio[i], caption=text[i], sample_rate=self.sr
             )
 
     def _log_predictions(
