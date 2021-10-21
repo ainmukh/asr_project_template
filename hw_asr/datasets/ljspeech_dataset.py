@@ -6,6 +6,7 @@ import shutil
 import torchaudio
 from speechbrain.utils.data_utils import download_file
 from tqdm import tqdm
+from sklearn.model_selection import train_test_split
 
 from hw_asr.base.base_dataset import BaseDataset
 from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
@@ -20,12 +21,20 @@ URL_LINKS = ['https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2']
 
 
 class LJSpeechDataset(BaseDataset):
-    def __init__(self, data_dir=None, *args, **kwargs):
+    def __init__(self, data_dir=None, split=None, *args, **kwargs):
         if data_dir is None:
             data_dir = ROOT_PATH / "data" / "datasets" / "ljspeech"
             data_dir.mkdir(exist_ok=True, parents=True)
+        self.split = split
+        self.df_path = self._data_dir / "metadata.csv"
         self._data_dir = data_dir
         index = self._get_or_load_index()
+
+        self.df = pd.read_csv(self.df_path, sep='|', header=None)
+        train_idx, test_idx = train_test_split(self.df.index, train_size=0.9, random_state=42)
+        self.train_idx = train_idx
+        self.test_idx = test_idx
+
         # print('args', args)
         # print('kwargs', kwargs)
         super().__init__(index, *args, **kwargs)
@@ -59,8 +68,14 @@ class LJSpeechDataset(BaseDataset):
             self._load_part()
 
         pass_token = '<pass>'
-        df = pd.read_csv(self._data_dir / "metadata.csv", sep='|', header=None)
-        df.fillna(pass_token, inplace=True)
+        # if len(self.df_path) == 0:
+        #     df = pd.read_csv(self._data_dir / "metadata.csv", sep='|', header=None)
+        # else:
+        if self.split == "train":
+            self.df.fillna(pass_token, inplace=True)
+            df = self.df.loc[self.train_idx]
+        else:
+            df = self.df.loc[self.test_idx]
         wav_dir = self._data_dir / 'wavs'
         for wav_id in tqdm(df[0]):
             if df[df[0] == wav_id][2].values[0] == pass_token:

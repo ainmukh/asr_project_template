@@ -180,7 +180,7 @@ class BaseDataset(Dataset):
                 f"Filtered {_total} ({_total / initial_size:.1%}) records  from dataset"
             )
 
-        if limit is not None:
+        if limit > 0:
             random.seed(42)  # best seed for deep learning
             random.shuffle(index)
             index = index[:limit]
