@@ -44,7 +44,7 @@ class LJSpeechDataset(BaseDataset):
         shutil.rmtree(str(self._data_dir / "LJSpeech-1.1"))
 
     def _get_or_load_index(self):
-        index_path = self._data_dir / "lj_index.json"
+        index_path = self._data_dir / f"lj_index_{self.split}.json"
         if index_path.exists():
             with index_path.open() as f:
                 index = json.load(f)
