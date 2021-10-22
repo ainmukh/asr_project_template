@@ -100,5 +100,6 @@
     "project_name": "hw1_chk2.1",
     "len_epoch": 300,
     "grad_norm_clip": 10
-  }
+  },
+  "warm_start": ""
 }

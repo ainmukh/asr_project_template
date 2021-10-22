@@ -60,16 +60,11 @@ class BaseDataset(Dataset):
         audio_wave = self.load_audio(audio_path)
         audio_wave, audio_spec = self.process_wave(audio_wave)
         text = self.process_text(data_dict['text'])
-        # x = 'Hello?? You\'re here, aren\'t you?'
-        # print(x)
-        # exit(print(self.process_text(x)))
         return {
             "audio": audio_wave,
             "spectrogram": audio_spec,
             "duration": data_dict["audio_len"],
-            # "text": data_dict["text"],
             "text": text,
-            # "text_encoded": self.text_encoder.encode(data_dict["text"]),
             "text_encoded": self.text_encoder.encode(text),
             "audio_path": audio_path,
         }
@@ -89,7 +84,6 @@ class BaseDataset(Dataset):
             audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
         return audio_tensor
 
-    # https: // pytorch.org / text / _modules / torchtext / data / utils.html
     def process_text(self, text: str):
         text = text.lower()
         symbols_space = ['?', '!', '.', '...', ',', ':', ';', '–']
@@ -111,7 +105,7 @@ class BaseDataset(Dataset):
                 self.config_parser["preprocessing"]["spectrogram"],
                 torchaudio.transforms,
             )
-            audio_tensor_spec = wave2spec(audio_tensor_wave).log()
+            audio_tensor_spec = wave2spec(audio_tensor_wave)
             if self.spec_augs is not None:
                 audio_tensor_spec = self.spec_augs(audio_tensor_spec)
             return audio_tensor_wave, audio_tensor_spec
@@ -122,17 +116,10 @@ class BaseDataset(Dataset):
     ) -> list:
         initial_size = len(index)
         if max_audio_length is not None:
-            # exceeds_audio_length = np.array(
-            #     [el for el in index if el["length"] <= max_audio_length]
-            # )
             exceeds_audio_length = np.array(
                 [1 if el["audio_len"] >= max_audio_length else 0 for el in index]
             )
-            # exceeds_audio_length = {
-            #     el['path'] for el in index if el["audio_len"] >= max_audio_length
-            # }
             _total = exceeds_audio_length.sum()
-            # _total = len(exceeds_audio_length)
             logger.info(
                 f"{_total} ({_total / initial_size:.1%}) records are longer then "
                 f"{max_audio_length} seconds. Excluding them."
@@ -142,26 +129,13 @@ class BaseDataset(Dataset):
 
         initial_size = len(index)
         if max_audio_length is not None:
-            # exceeds_text_length = np.array(
-            #     [
-            #         el
-            #         for el in index
-            #         if len(BaseTextEncoder.normalize_text(el["text"])) <= max_text_length
-            #     ]
-            # )
             exceeds_text_length = np.array(
                 [
                     1 if len(BaseTextEncoder.normalize_text(el["text"])) >= max_text_length else 0
                     for el in index
                 ]
             )
-            # exceeds_text_length = {
-            #     el['path']
-            #     for el in index
-            #     if len(BaseTextEncoder.normalize_text(el["text"])) >= max_text_length
-            # }
             _total = exceeds_text_length.sum()
-            # _total = len(exceeds_text_length)
             logger.info(
                 f"{_total} ({_total / initial_size:.1%}) records are longer then "
                 f"{max_text_length} characters. Excluding them."
@@ -174,7 +148,6 @@ class BaseDataset(Dataset):
         # if records_to_filter is not False and records_to_filter.any():
         if records_to_filter is not False and records_to_filter.any():
             _total = records_to_filter.sum()
-            # _total = len(records_to_filter)
             index = [el for el, exclude in zip(index, records_to_filter) if not exclude]
             logger.info(
                 f"Filtered {_total} ({_total / initial_size:.1%}) records  from dataset"
