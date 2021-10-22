@@ -111,7 +111,7 @@ class BaseDataset(Dataset):
                 self.config_parser["preprocessing"]["spectrogram"],
                 torchaudio.transforms,
             )
-            audio_tensor_spec = wave2spec(audio_tensor_wave)
+            audio_tensor_spec = wave2spec(audio_tensor_wave).log()
             if self.spec_augs is not None:
                 audio_tensor_spec = self.spec_augs(audio_tensor_spec)
             return audio_tensor_wave, audio_tensor_spec

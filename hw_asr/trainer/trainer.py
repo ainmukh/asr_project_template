@@ -223,7 +223,7 @@ class Trainer(BaseTrainer):
                 pred = self.text_encoder.beam_search(log_probs[i])[0][0]
                 pred_texts.append(pred)
         else:
-            pred_texts = [self.text_encoder.decode(p) for p in predictions]
+            pred_texts = [self.text_encoder.decode(p)[: int(l)] for p, l in zip(predictions, log_probs_length)]
 
         argmax_pred_texts = [
             self.text_encoder.decode(p)[: int(l)]
