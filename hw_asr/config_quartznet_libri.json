@@ -61,9 +61,10 @@
     }
   },
   "optimizer": {
-    "type": "Adam",
+    "type": "AdamW",
     "args": {
-      "lr": 1e-2
+      "lr": 1e-2,
+      "weight_decay": 1e-5
     }
   },
   "loss": {
