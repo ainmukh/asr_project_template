@@ -61,7 +61,7 @@
     }
   },
   "optimizer": {
-    "type": "AdamW",
+    "type": "Adam",
     "args": {
       "lr": 1e-2,
       "weight_decay": 1e-5
