@@ -217,7 +217,7 @@ class Trainer(BaseTrainer):
             return
 
         predictions = log_probs.cpu().argmax(-1)
-        if part == "val":
+        if part == "val" and self.text_encoder.lm is not None:
             pred_texts = []
             for i in range(log_probs.size(0)):
                 pred = self.text_encoder.beam_search(log_probs[i])[0][0]

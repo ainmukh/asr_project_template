@@ -27,7 +27,7 @@ URL_LINKS = {
 
 
 class LibrispeechDataset(BaseDataset):
-    def __init__(self, part, data_dir=None, *args, **kwargs):
+    def __init__(self, part, data_dir=None, split=None, *args, **kwargs):
         assert part in URL_LINKS or part == 'train_all'
 
         if data_dir is None:
