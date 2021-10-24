@@ -13,8 +13,6 @@ from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
 from hw_asr.trainer import Trainer
 from hw_asr.utils import prepare_device
 from hw_asr.utils.parse_config import ConfigParser
-from sklearn.model_selection import train_test_split
-import pandas as pd
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

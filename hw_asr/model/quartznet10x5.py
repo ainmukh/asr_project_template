@@ -61,7 +61,7 @@ class Block(nn.Module):
         return x
 
 
-class QuartzNet(BaseModel):
+class QuartzNet10x5(BaseModel):
     def __init__(self, n_feats, n_class, *args, **kwargs):
         super().__init__(n_feats, n_class, *args, **kwargs)
         self.conv1 = Conv(n_feats, stride=1, padding=(33 - 1) // 2)

@@ -1,5 +1,5 @@
 {
-  "name": "quartznet_config2",
+  "name": "quartznet10x5",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -21,7 +21,7 @@
     ]
   },
   "arch": {
-    "type": "QuartzNet",
+    "type": "QuartzNet10x5",
     "args": {
       "n_feats": 64,
       "lm_path": "hw_asr/pretrained/lm.binary"
