@@ -130,6 +130,10 @@ class Trainer(BaseTrainer):
         ):
             try:
                 self._train_iteration(batch, epoch, batch_idx)
+                for p in self.model.parameters():
+                    if p.grad is not None:
+                        del p.grad  # free some memory
+                torch.cuda.empty_cache()
             except RuntimeError as e:
                 if 'out of memory' in str(e) and self.skip_oom:
                     self.logger.warning("OOM on batch. Skipping batch.")
