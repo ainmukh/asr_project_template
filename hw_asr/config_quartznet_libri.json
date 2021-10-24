@@ -12,7 +12,6 @@
   },
   "augmentations": {
     "wave": [
-      {"type": "Gain", "args": {"p": 0.1, "sr": 16000}},
       {"type": "Noise", "args": {"p": 0.1, "noise_name": "trumpet", "noise_level": 20}},
       {"type": "TimeStretching", "args": {"p": 0.1}}
     ],
