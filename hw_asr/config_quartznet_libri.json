@@ -62,7 +62,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 1e-4,
+      "lr": 5e-4,
       "weight_decay": 1e-3
     }
   },
@@ -99,9 +99,9 @@
     "monitor": "min val_loss",
     "early_stop": 100,
     "writer": "wandb",
-    "project_name": "hw1_chk2.3",
-    "len_epoch": 100,
+    "project_name": "hw1_chk2.4",
+    "len_epoch": 300,
     "grad_norm_clip": 10
   },
-  "warm_start": "hw_asr/pretrained/model_best.pth"
+  "warm_start": ""
 }
