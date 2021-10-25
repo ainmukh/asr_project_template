@@ -71,7 +71,7 @@ class CTCCharTextEncoder(CharTextEncoder):
         #                     heap.add((cur_prob, cur_hypo, cur_path))
         #                     hypos_set[(cur_hypo, cur_path)] = cur_prob
         #     hypos = heap
-        res = beam_search(probs, alphabet, beam_size=beam_size, lm_model=self.lm)[0]
+        res = beam_search(probs, alphabet, beam_size=beam_size, lm_model=self.lm, lm_alpha=0.2, lm_beta=0.0001)[0]
         return res
 
         # res = beam_search(probs.cpu().detach().numpy(), alphabet, beam_size=100)
