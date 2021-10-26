@@ -4,10 +4,10 @@
 
 ```shell
 pip install -r ./requirements.txt
-pip install -i https://test.pypi.org/simple/ ctcdecoder==0.1.0
+pip install ctcdecoder==0.1.0
 wget https://www.dropbox.com/sh/o67ylzg2pkdskx0/AAABb4RGYE1-5xlMarL4OLDta
 unzip AAABb4RGYE1-5xlMarL4OLDta -d hw_asr/pretrained
-mv hw_asr/pretrained/checkpoint.pth default_test_model/
+mv hw_asr/pretrained/checkpoint.pth checkpoint.pth
 ```
 
 ## Usage
