@@ -3,7 +3,7 @@
 ## Installation guide
 
 ```shell
-pip install -r ./requirements.txt
+pip install -qqq -r ./requirements.txt
 pip install ctcdecoder==0.1.0
 wget https://www.dropbox.com/sh/o67ylzg2pkdskx0/AAABb4RGYE1-5xlMarL4OLDta
 unzip AAABb4RGYE1-5xlMarL4OLDta -d hw_asr/pretrained
