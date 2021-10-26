@@ -27,9 +27,6 @@ class LJSpeechDataset(BaseDataset):
         self.split = split
         self._data_dir = data_dir
         index = self._get_or_load_index()
-
-        # print('args', args)
-        # print('kwargs', kwargs)
         super().__init__(index, *args, **kwargs)
 
     def _load_part(self):
@@ -61,9 +58,6 @@ class LJSpeechDataset(BaseDataset):
             self._load_part()
 
         pass_token = '<pass>'
-        # if len(self.df_path) == 0:
-        #     df = pd.read_csv(self._data_dir / "metadata.csv", sep='|', header=None)
-        # else:
         df_path = self._data_dir / "metadata.csv"
         df = pd.read_csv(df_path, sep='|', header=None)
         df.fillna(pass_token, inplace=True)

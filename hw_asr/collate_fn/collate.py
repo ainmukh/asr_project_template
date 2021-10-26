@@ -32,4 +32,3 @@ def collate_fn(dataset_items: List[dict]) -> dict:  # here comes the batch
             if result_batch[key].size(-1) == 1:
                 result_batch[key] = result_batch[key].squeeze(-1)
     return result_batch
-    # raise NotImplementedError

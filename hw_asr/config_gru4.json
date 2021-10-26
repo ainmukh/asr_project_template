@@ -1,5 +1,5 @@
 {
-  "name": "config_gru",
+  "name": "config_gru4",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -64,7 +64,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 5e-4,
+      "lr": 1e-3,
       "weight_decay": 1e-5
     }
   },

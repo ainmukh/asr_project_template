@@ -2,7 +2,7 @@ from hw_asr.base.base_text_encoder import BaseTextEncoder
 import json
 from pathlib import Path
 from string import ascii_lowercase
-from typing import List, Union
+from typing import List, Union, Tuple
 
 import os
 import numpy as np
@@ -33,7 +33,10 @@ class BytePairEncoder(BaseTextEncoder):
 
     def encode(self, text: str) -> Tensor:
         text = self.normalize_text(text)
-        return Tensor(self.encoder.encode(text)).to(torch.int)
+        encoded_text = Tensor(self.encoder.encode(text)).to(torch.int)
+        if encoded_text.dim() == 1:
+            encoded_text = encoded_text.unsqueeze(0)
+        return encoded_text
 
     def decode(self, vector: Union[Tensor, np.ndarray, List[int]]) -> str:
         if vector is not List:
@@ -63,7 +66,7 @@ class BytePairEncoder(BaseTextEncoder):
                     cur_hypo = hypo if path == cur_path else hypo + cur_path
                     # LM fusion
                     if self.lm:
-                        lm_prob = self.lm(cur_hypo)
+                        lm_prob = self.lm.score(cur_hypo)
                         cur_prob += 0.9 * np.exp(lm_prob) + 0.0001 * i
                     if (cur_hypo, cur_path) in hypos_set:
                         prev_prob = hypos_set[(cur_hypo, cur_path)]

@@ -212,7 +212,6 @@ class Trainer(BaseTrainer):
             *args,
             **kwargs,
     ):
-        # TODO: implement logging of beam search results
         if self.writer is None:
             return
 

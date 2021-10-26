@@ -16,15 +16,21 @@ from hw_asr.utils import prepare_device
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.parse_config import ConfigParser
 
+from hw_asr.metric.utils import calc_cer
+import jiwer
+
 DEFAULT_TEST_CONFIG_PATH = ROOT_PATH / "default_test_config.json"
-DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "model_best.pth"
+DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 
 
 def main(config, out_file):
     logger = config.get_logger("test")
 
     # text_encoder
-    text_encoder = CTCCharTextEncoder.get_simple_alphabet()
+    lm_path = ''
+    if "lm_path" in config['arch']['args']:
+        lm_path = config['arch']['args']['lm_path']
+    text_encoder = CTCCharTextEncoder.get_simple_alphabet(lm_path=lm_path)
 
     # setup data_loader instances
     dataloaders = get_dataloaders(config, text_encoder)
@@ -36,9 +42,7 @@ def main(config, out_file):
     device, device_ids = prepare_device(config["n_gpu"])
 
     # get function handles of loss and metrics
-    # loss_fn = getattr(module_loss, config["loss"])
     loss_fn = config.init_obj(config["loss"], module_loss).to(device)
-    # metric_fns = [getattr(module_metric, met) for met in config["metrics"]]
     metric_fns = [
         config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
         for metric_dict in config["metrics"]
@@ -69,14 +73,18 @@ def main(config, out_file):
             batch["probs"] = batch["log_probs"].exp().cpu()
             batch["argmax"] = batch["probs"].argmax(-1)
             for j in range(len(batch["text"])):
-                print('INSIDE BATCH')
+                argmax_decode = text_encoder.decode(batch["argmax"][j])
+                beam_search = text_encoder.beam_search(
+                        batch["probs"][j], beam_size=100
+                    )[:10]
                 results.append({
                     "ground_trurh": batch["text"][j],
-                    "pred_text_argmax": text_encoder.decode(batch["argmax"][j]),
-                    "pred_text_beam_search": text_encoder.beam_search(
-                        batch["probs"][j], beam_size=100
-                    )[:10],
-
+                    "pred_text_argmax": argmax_decode,
+                    "pred_text_beam_search": beam_search,
+                    "argmax_wer": jiwer.wer(batch["text"][j], argmax_decode) * 100,
+                    "argmax_cer": calc_cer(batch["text"][j], argmax_decode) * 100,
+                    "bs_wer": jiwer.wer(batch["text"][j], beam_search[0][0]) * 100,
+                    "bs_cer": calc_cer(batch["text"][j], beam_search[0][0]) * 100
                 })
     with Path(out_file).open('w') as f:
         json.dump(results, f, indent=2)

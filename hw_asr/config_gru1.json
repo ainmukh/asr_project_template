@@ -1,5 +1,5 @@
 {
-  "name": "default_config",
+  "name": "config_gru1",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,

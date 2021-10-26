@@ -74,14 +74,3 @@ class CTCCharTextEncoder(CharTextEncoder):
         res = beam_search(probs, alphabet, beam_size=beam_size, lm_model=self.lm, lm_alpha=0.2, lm_beta=0.0001)[0]
         return res
 
-        # res = beam_search(probs.cpu().detach().numpy(), alphabet, beam_size=100)
-
-        # hypos = [(hypo, prob) for hypo, prob in zip(res[0], res[1])]
-        # return hypos
-
-        # for i in range(len(hypos)):
-        #     hypos[i] = self.decode(hypos[i][0]), hypos[i][1]
-
-        # # TODO: your code here
-        # raise NotImplementedError
-        # return sorted(hypos, key=lambda x: x[1], reverse=True)

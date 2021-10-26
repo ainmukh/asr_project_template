@@ -48,10 +48,6 @@ class BaseTrainer:
 
         self.checkpoint_dir = config.save_dir
 
-        # setup visualization writer instance
-        # self.writer = TensorboardWriter(
-        #     config.log_dir, self.logger, cfg_trainer["tensorboard"]
-        # )
         self.writer = Writer(
             config.log_dir, self.logger, cfg_trainer["writer"], cfg_trainer['project_name']
         )

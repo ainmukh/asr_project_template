@@ -39,8 +39,6 @@ class LibrispeechDataset(BaseDataset):
                          for part in URL_LINKS if 'train' in part], [])
         else:
             index = self._get_or_load_index(part)
-        # print('args', args)
-        # print('kwargs', kwargs)
         super().__init__(index, *args, **kwargs)
 
     def _load_part(self, part):

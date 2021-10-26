@@ -56,7 +56,3 @@ if __name__ == "__main__":
     ]
 
     ds = CustomAudioDataset(data, text_encoder=text_encoder, config_parser=config_parser)
-    print("[0]")
-    print(ds[0])
-    print("[1]")
-    print(ds[1])

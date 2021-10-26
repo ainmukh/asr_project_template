@@ -10,6 +10,7 @@ import hw_asr.metric as module_metric
 import hw_asr.model as module_arch
 from hw_asr.datasets.utils import get_dataloaders
 from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
+from hw_asr.text_encoder.byte_pair_encoder import BytePairEncoder
 from hw_asr.trainer import Trainer
 from hw_asr.utils import prepare_device
 from hw_asr.utils.parse_config import ConfigParser
@@ -33,6 +34,7 @@ def main(config):
     if "lm_path" in config['arch']['args']:
         lm_path = config['arch']['args']['lm_path']
     text_encoder = CTCCharTextEncoder.get_simple_alphabet(lm_path=lm_path)
+    # text_encoder = BytePairEncoder("hw_asr/pretrained/bpe_tokenizer.model", lm_path)
 
     # setup data_loader instances
     dataloaders = get_dataloaders(config, text_encoder)

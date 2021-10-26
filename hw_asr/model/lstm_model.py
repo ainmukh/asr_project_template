@@ -12,7 +12,6 @@ class LSTMModel(BaseModel):
     def forward(self, spectrogram, *args, **kwargs):
         x, _ = self.encoder(spectrogram.transpose(1, 2))
         x = self.head(x)
-        # print('output size=', x.size())
         return x
 
     def transform_input_lengths(self, input_lengths):
