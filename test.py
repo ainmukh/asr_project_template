@@ -77,14 +77,15 @@ def main(config, out_file):
                 beam_search = text_encoder.beam_search(
                         batch["probs"][j], beam_size=100
                     )[:10]
+                ground_truth_text = batch["text"][j].lower()
                 results.append({
-                    "ground_trurh": batch["text"][j],
+                    "ground_truth": ground_truth_text,
                     "pred_text_argmax": argmax_decode,
                     "pred_text_beam_search": beam_search,
-                    "argmax_wer": jiwer.wer(batch["text"][j], argmax_decode) * 100,
-                    "argmax_cer": calc_cer(batch["text"][j], argmax_decode) * 100,
-                    "bs_wer": jiwer.wer(batch["text"][j], beam_search[0][0]) * 100,
-                    "bs_cer": calc_cer(batch["text"][j], beam_search[0][0]) * 100
+                    "argmax_wer": jiwer.wer(ground_truth_text, argmax_decode) * 100,
+                    "argmax_cer": calc_cer(ground_truth_text, argmax_decode) * 100,
+                    "bs_wer": jiwer.wer(ground_truth_text, beam_search[0][0]) * 100,
+                    "bs_cer": calc_cer(ground_truth_text, beam_search[0][0]) * 100
                 })
     with Path(out_file).open('w') as f:
         json.dump(results, f, indent=2)
