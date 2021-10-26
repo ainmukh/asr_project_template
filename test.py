@@ -20,7 +20,7 @@ from hw_asr.metric.utils import calc_cer
 import jiwer
 
 DEFAULT_TEST_CONFIG_PATH = ROOT_PATH / "default_test_config.json"
-DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
+DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "checkpoint.pth"
 
 
 def main(config, out_file):
@@ -156,6 +156,7 @@ if __name__ == "__main__":
                     "args": {
                         "audio_dir": test_data_folder / "audio",
                         "transcription_dir": test_data_folder / "transcriptions",
+			"limit": -1
                     }
                 }
             ]
