@@ -14,7 +14,7 @@ mv hw_asr/pretrained/checkpoint.pth checkpoint.pth
 ```shell
 python test.py \
    -c default_test_config.json \
-   -r default_test_model/checkpoint.pth \
+   -r checkpoint.pth \
    -t test_data \
    -o test_result.json
 ```
