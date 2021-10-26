@@ -23,7 +23,7 @@ class BaseDataset(Dataset):
             config_parser: ConfigParser,
             wave_augs=None,
             spec_augs=None,
-            limit=None,
+            limit=-1,
             max_audio_length=None,
             max_text_length=None,
     ):
