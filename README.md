@@ -1,5 +1,11 @@
 # ASR project: DeepSpeech
 
+## May be not so obvious
+```shell
+git clone https://github.com/ainmukh/asr_project_template
+cd asr_project_template
+```
+
 ## Installation guide
 
 ```shell
