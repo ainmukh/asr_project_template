@@ -16,7 +16,7 @@ unzip AAABb4RGYE1-5xlMarL4OLDta -d hw_asr/pretrained
 mv hw_asr/pretrained/checkpoint.pth checkpoint.pth
 ```
 
-## Usage
+## Usage (it works only on GPU)
 ```shell
 python test.py \
    -c default_test_config.json \
