@@ -9,18 +9,17 @@ cd asr_project_template
 ## Installation guide
 ```shell
 pip install -q -r ./requirements.txt
+pip install ctcdecoder==0.1.0
+wget https://www.dropbox.com/sh/o67ylzg2pkdskx0/AAABb4RGYE1-5xlMarL4OLDta
+unzip AAABb4RGYE1-5xlMarL4OLDta -d hw_asr/pretrained
+mv hw_asr/pretrained/checkpoint.pth checkpoint.pth
 ```
 
-## Get baseline and split
+## Testing
 ```shell
-mkdir saved
-wget https://www.dropbox.com/s/etbywu0xvvccwsl/indices.pth
-wget https://www.dropbox.com/s/tvr7bq7kj7ct00k/model_base.pth
-mv indices.pth model_base.pth
-```
-## Get all models
-```shell
-mkdir saved
-wget https://www.dropbox.com/sh/dg7ofsb1xollq49/AACpI2Fk9pw9qtwmP5j8WxNUa
-unzip AACpI2Fk9pw9qtwmP5j8WxNUa -d saved
+python test.py \
+   -c default_test_config.json \
+   -r checkpoint.pth \
+   -t test_data \
+   -o test_result.json
 ```
